@@ -70,7 +70,10 @@ export class ListsController {
   }
 
   @Delete(':id')
-  deleteTaskListById(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.listsService.deleteTaskListById(id);
+  deleteTaskListById(
+    @Param('id', ParseIntPipe) id: number,
+    @GetUser() user: User,
+  ): Promise<void> {
+    return this.listsService.deleteTaskListById(id, user);
   }
 }

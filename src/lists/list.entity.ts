@@ -6,8 +6,9 @@ import {
   OneToMany,
   ManyToOne,
 } from 'typeorm';
-import { Task } from 'src/tasks/task.entity';
-import { User } from 'src/auth/user.entity';
+
+import { Task } from '../tasks/task.entity';
+import { User } from '../auth/user.entity';
 
 @Entity()
 export class TaskList extends BaseEntity {
@@ -36,4 +37,15 @@ export class TaskList extends BaseEntity {
     { eager: true },
   )
   tasks: Task[];
+
+  static createMock() {
+    return {
+      id: 1,
+      title: 'A mocked list',
+      system: false,
+      user: User.createMock(),
+      userId: 42,
+      tasks: [],
+    };
+  }
 }

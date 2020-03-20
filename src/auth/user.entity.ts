@@ -6,7 +6,7 @@ import {
   Column,
   OneToMany,
 } from 'typeorm';
-import { TaskList } from 'src/lists/list.entity';
+import { TaskList } from '../lists/list.entity';
 import * as bcrypt from 'bcrypt';
 
 @Entity()
@@ -34,5 +34,12 @@ export class User extends BaseEntity {
   async validatePassword(password: string): Promise<boolean> {
     const hash = await bcrypt.hash(password, this.salt);
     return hash === this.password;
+  }
+
+  static createMock() {
+    return {
+      id: 42,
+      username: 'Testr',
+    };
   }
 }

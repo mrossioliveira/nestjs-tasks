@@ -6,7 +6,7 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { TaskStatus } from './task-status.enum';
-import { TaskList } from 'src/lists/list.entity';
+import { TaskList } from '../lists/list.entity';
 
 @Entity()
 export class Task extends BaseEntity {

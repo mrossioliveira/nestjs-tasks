@@ -5,7 +5,7 @@ import { TaskListRepository } from './list.repository';
 import { TaskList } from './list.entity';
 import { CreateTaskListDto } from './dto/create-list.dto';
 import { DeleteResult } from 'typeorm';
-import { User } from 'src/auth/user.entity';
+import { User } from '../auth/user.entity';
 import { UpdateListDTO } from './dto/update-list.dto';
 
 @Injectable()
@@ -60,20 +60,26 @@ export class ListsService {
    * @param user Authenticated user
    * @param title The new title to be updated
    */
-  async updateTaskList(id: number, user: User, updateListDto: UpdateListDTO): Promise<TaskList> {
+  async updateTaskList(
+    id: number,
+    user: User,
+    updateListDto: UpdateListDTO,
+  ): Promise<TaskList> {
     const taskList = await this.getTaskListById(id, user);
     taskList.title = updateListDto.title;
     await taskList.save();
     return taskList;
   }
 
-  // TODO: Check if the authenicated user has access to the list it's trying to delete
   /**
    * Deletes a single task list
    * @param id ID of the task list
    */
-  async deleteTaskListById(id: number): Promise<void> {
-    const result: DeleteResult = await this.taskListRepository.delete(id);
+  async deleteTaskListById(id: number, user: User): Promise<void> {
+    const result: DeleteResult = await this.taskListRepository.delete({
+      id,
+      userId: user.id,
+    });
 
     if (result.affected === 0) {
       throw new NotFoundException(`Task list with ID ${id} not found`);
