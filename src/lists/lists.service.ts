@@ -53,7 +53,6 @@ export class ListsService {
     return this.taskListRepository.createTaskList(createTaskListDto, user);
   }
 
-  // ? Create a DTO so it's possible to update another fields in the future
   /**
    * Update a single task list of the authenticated user
    * @param id Task list ID
