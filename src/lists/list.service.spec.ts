@@ -4,6 +4,7 @@ import { TaskListRepository } from './list.repository';
 import { TaskList } from './list.entity';
 import { NotFoundException } from '@nestjs/common';
 import { CreateTaskListDto } from './dto/create-list.dto';
+import { async } from 'rxjs/internal/scheduler/async';
 
 const mockUser = { id: 42, username: 'Tester' };
 const mockTaskListRepository = () => ({
@@ -99,12 +100,37 @@ describe('ListsService', () => {
   });
 
   describe('updateTaskList', () => {
-    it('should update a task list entity', () => {
-      fail('TODO: Implement!');
+    it('should update a task list entity', async () => {
+      const LIST_TITLE = 'Test title';
+      const save = jest.fn().mockResolvedValue(true);
+
+      listsService.getTaskListById = jest.fn().mockResolvedValue({
+        title: LIST_TITLE,
+        save,
+      });
+
+      expect(listsService.getTaskListById).not.toHaveBeenCalled();
+      expect(save).not.toHaveBeenCalled();
+
+      const updateTaskDto = { title: LIST_TITLE };
+      const result = await listsService.updateTaskList(
+        1,
+        mockUser,
+        updateTaskDto,
+      );
+
+      expect(listsService.getTaskListById).toHaveBeenCalled();
+      expect(save).toHaveBeenCalled();
+      expect(result.title).toEqual(LIST_TITLE);
     });
 
     it('should throw an error as the task list was not found', () => {
-      fail('TODO: Implement!');
+      listsService.getTaskListById = jest.fn().mockRejectedValue(false);
+
+      expect(listsService.getTaskListById).not.toHaveBeenCalled();
+      expect(
+        listsService.getTaskListById(1, mockUser, { title: 'Not found' }),
+      ).rejects.toThrow();
     });
   });
 
