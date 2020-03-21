@@ -98,6 +98,16 @@ describe('ListsService', () => {
     });
   });
 
+  describe('updateTaskList', () => {
+    it('should update a task list entity', () => {
+      fail('TODO: Implement!');
+    });
+
+    it('should throw an error as the task list was not found', () => {
+      fail('TODO: Implement!');
+    });
+  });
+
   describe('deleteTaskListById', () => {
     it('should delete a task list', async () => {
       listRepository.delete.mockResolvedValue({ affected: 1 });
