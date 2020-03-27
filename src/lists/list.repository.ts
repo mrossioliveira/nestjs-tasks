@@ -7,8 +7,6 @@ import { User } from 'src/auth/user.entity';
 export class TaskListRepository extends Repository<TaskList> {
   async getTaskLists(user: User): Promise<TaskList[]> {
     const query = this.createQueryBuilder('task_list')
-      // .addSelect('task.id')
-      // .leftJoinAndSelect('task_list.tasks', 'task')
       .where('task_list.userId = :userId', { userId: user.id })
       .orderBy('task_list.id', 'ASC');
 
