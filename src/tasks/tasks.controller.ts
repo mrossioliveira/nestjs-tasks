@@ -83,13 +83,4 @@ export class TasksController {
   ): Promise<Task> {
     return this.tasksService.updateTaskImportant(id, important, user);
   }
-
-  @Patch(':id/myday')
-  updateTaskMyDay(
-    @Param('id', ParseIntPipe) id: number,
-    @Body('myDay', ParseBooleanPipe) myDay: boolean,
-    @GetUser() user: User,
-  ): Promise<Task> {
-    return this.tasksService.updateTaskMyDay(id, myDay, user);
-  }
 }

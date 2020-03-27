@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { TaskStatus } from './task-status.enum';
 import { TaskList } from '../lists/list.entity';
+import { User } from 'src/auth/user.entity';
 
 @Entity()
 export class Task extends BaseEntity {
@@ -14,13 +15,23 @@ export class Task extends BaseEntity {
   id: number;
 
   @ManyToOne(
+    type => User,
+    user => user.tasks,
+    { eager: false },
+  )
+  user: User;
+
+  @Column()
+  userId: number;
+
+  @ManyToOne(
     type => TaskList,
     task => task.tasks,
-    { eager: false, onDelete: 'CASCADE' },
+    { eager: false, onDelete: 'CASCADE', nullable: true },
   )
   list: TaskList;
 
-  @Column()
+  @Column({ nullable: true })
   listId: number;
 
   @Column()
@@ -31,9 +42,6 @@ export class Task extends BaseEntity {
 
   @Column()
   important: boolean;
-
-  @Column()
-  myDay: boolean;
 
   @Column()
   status: TaskStatus;

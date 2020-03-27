@@ -9,8 +9,8 @@ import { User } from 'src/auth/user.entity';
 export class TaskRepository extends Repository<Task> {
   async getTasks(user: User): Promise<Task[]> {
     const query = this.createQueryBuilder('task')
-      .innerJoin('task.list', 'list')
-      .where('list.userId = :userId', { userId: user.id });
+      .where('task.userId = :userId', { userId: user.id })
+      .orderBy('task.id', 'DESC');
 
     const tasks = await query.getMany();
     return tasks;
@@ -18,9 +18,8 @@ export class TaskRepository extends Repository<Task> {
 
   async getTaskById(id: number, user: User): Promise<Task> {
     const query = this.createQueryBuilder('task')
-      .innerJoinAndSelect('task.list', 'list')
       .where('task.id = :taskId', { taskId: id })
-      .andWhere('list.userId = :userId', { userId: user.id });
+      .andWhere('task.userId = :userId', { userId: user.id });
 
     const task = await query.getOne();
     return task;
@@ -29,16 +28,20 @@ export class TaskRepository extends Repository<Task> {
   async createTask(
     createTaskDto: CreateTaskDto,
     taskList: TaskList,
+    user: User,
   ): Promise<Task> {
     const { title, description, important, myDay } = createTaskDto;
     const newTask = new Task();
+    newTask.user = user;
     newTask.list = taskList;
     newTask.title = title;
     newTask.description = description;
     newTask.status = TaskStatus.OPEN;
     newTask.important = !!important;
-    newTask.myDay = !!myDay;
     await newTask.save();
+
+    delete newTask.user;
+
     return newTask;
   }
 }

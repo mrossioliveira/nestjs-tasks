@@ -1,17 +1,18 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { TaskStatus } from './task-status.enum';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskRepository } from './task.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './task.entity';
 import { DeleteResult } from 'typeorm';
-import { TaskListRepository } from 'src/lists/list.repository';
 import { ListsService } from 'src/lists/lists.service';
 import { User } from 'src/auth/user.entity';
 import { UpdateTaskDTO } from './dto/update-task.dto';
 
 @Injectable()
 export class TasksService {
+  private logger = new Logger('TasksService');
+
   constructor(
     @InjectRepository(TaskRepository)
     private taskRepository: TaskRepository,
@@ -34,11 +35,17 @@ export class TasksService {
   }
 
   async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
-    const taskList = await this.listService.getTaskListById(
-      createTaskDto.listId,
-      user,
-    );
-    return this.taskRepository.createTask(createTaskDto, taskList);
+    let taskList;
+    try {
+      taskList = await this.listService.getTaskListById(
+        createTaskDto.listId,
+        user,
+      );
+    } catch (error) {
+      this.logger.log('Task created without a list');
+    }
+
+    return this.taskRepository.createTask(createTaskDto, taskList, user);
   }
 
   async deleteTaskById(id: number): Promise<void> {
@@ -80,13 +87,6 @@ export class TasksService {
   ): Promise<Task> {
     const task = await this.getTaskById(id, user);
     task.important = important;
-    await task.save();
-    return task;
-  }
-
-  async updateTaskMyDay(id: number, myDay: boolean, user: User): Promise<Task> {
-    const task = await this.getTaskById(id, user);
-    task.myDay = myDay;
     await task.save();
     return task;
   }

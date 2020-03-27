@@ -3,7 +3,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateTaskDto {
   @ApiProperty()
-  @IsNotEmpty()
   listId: number;
 
   @ApiProperty()
