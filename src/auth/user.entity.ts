@@ -5,6 +5,8 @@ import {
   PrimaryGeneratedColumn,
   Column,
   OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { TaskList } from '../lists/list.entity';
 import * as bcrypt from 'bcrypt';
@@ -22,6 +24,9 @@ export class User extends BaseEntity {
   @Column()
   password: string;
 
+  @Column({ unique: true })
+  email: string;
+
   @Column()
   salt: string;
 
@@ -38,6 +43,18 @@ export class User extends BaseEntity {
     { eager: true },
   )
   tasks: TaskList[];
+
+  @CreateDateColumn({
+    name: 'created_at',
+    nullable: false,
+  })
+  createdAt: Date;
+
+  @UpdateDateColumn({
+    name: 'updated_at',
+    nullable: false,
+  })
+  updatedAt: Date;
 
   async validatePassword(password: string): Promise<boolean> {
     const hash = await bcrypt.hash(password, this.salt);

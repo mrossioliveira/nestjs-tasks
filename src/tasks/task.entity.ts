@@ -4,6 +4,8 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { TaskStatus } from './task-status.enum';
 import { TaskList } from '../lists/list.entity';
@@ -17,7 +19,7 @@ export class Task extends BaseEntity {
   @ManyToOne(
     type => User,
     user => user.tasks,
-    { eager: false },
+    { eager: false, nullable: false },
   )
   user: User;
 
@@ -45,4 +47,16 @@ export class Task extends BaseEntity {
 
   @Column()
   status: TaskStatus;
+
+  @CreateDateColumn({
+    name: 'created_at',
+    nullable: false,
+  })
+  createdAt: Date;
+
+  @UpdateDateColumn({
+    name: 'updated_at',
+    nullable: false,
+  })
+  updatedAt: Date;
 }

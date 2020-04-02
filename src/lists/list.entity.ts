@@ -5,6 +5,8 @@ import {
   Column,
   OneToMany,
   ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 import { Task } from '../tasks/task.entity';
@@ -37,6 +39,18 @@ export class TaskList extends BaseEntity {
     { eager: true },
   )
   tasks: Task[];
+
+  @CreateDateColumn({
+    name: 'created_at',
+    nullable: false,
+  })
+  createdAt: Date;
+
+  @UpdateDateColumn({
+    name: 'updated_at',
+    nullable: false,
+  })
+  updatedAt: Date;
 
   static createMock() {
     return {

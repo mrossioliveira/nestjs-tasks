@@ -1,5 +1,13 @@
-import { IsNotEmpty, IsString, MinLength, MaxLength } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  MinLength,
+  MaxLength,
+  IsEmail,
+  IsOptional,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Unique } from 'typeorm';
 
 export class AuthCredentialsDto {
   @ApiProperty()
@@ -15,4 +23,11 @@ export class AuthCredentialsDto {
   @MaxLength(20)
   @IsNotEmpty()
   password: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsEmail()
+  @IsOptional({ always: true })
+  @Unique('email', ['email'])
+  email: string;
 }
