@@ -7,4 +7,4 @@ db:
   database: 'task_dev'
 
 jwt:
-  expiresIn: 7200
+  expiresIn: 3600
