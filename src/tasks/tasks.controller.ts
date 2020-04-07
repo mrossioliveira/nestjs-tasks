@@ -18,8 +18,8 @@ import { TaskStatusValidationPipe } from './pipes/task-status-validation.pipe';
 import { Task } from './task.entity';
 import { ParseBooleanPipe } from './pipes/parse-boolean.pipe';
 import { AuthGuard } from '@nestjs/passport';
-import { GetUser } from 'src/auth/get-user.decorator';
-import { User } from 'src/auth/user.entity';
+import { GetUser } from '../auth/get-user.decorator';
+import { User } from '../auth/user.entity';
 import { UpdateTaskDTO } from './dto/update-task.dto';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 

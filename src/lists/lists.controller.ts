@@ -15,8 +15,8 @@ import {
 import { ListsService } from './lists.service';
 import { TaskList } from './list.entity';
 import { CreateTaskListDto } from './dto/create-list.dto';
-import { GetUser } from 'src/auth/get-user.decorator';
-import { User } from 'src/auth/user.entity';
+import { GetUser } from '../auth/get-user.decorator';
+import { User } from '../auth/user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateListDTO } from './dto/update-list.dto';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';

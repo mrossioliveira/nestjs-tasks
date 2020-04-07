@@ -5,8 +5,8 @@ import { TaskRepository } from './task.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './task.entity';
 import { DeleteResult } from 'typeorm';
-import { ListsService } from 'src/lists/lists.service';
-import { User } from 'src/auth/user.entity';
+import { ListsService } from '../lists/lists.service';
+import { User } from '../auth/user.entity';
 import { UpdateTaskDTO } from './dto/update-task.dto';
 
 @Injectable()
@@ -63,7 +63,7 @@ export class TasksService {
   ): Promise<Task> {
     const task = await this.getTaskById(id, user);
 
-    task.title = updateTaskDto.title;
+    task.title = updateTaskDto.title.trim();
     task.description = updateTaskDto.description;
     await task.save();
     return task;

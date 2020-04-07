@@ -2,8 +2,8 @@ import { Repository, EntityRepository } from 'typeorm';
 import { Task } from './task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskStatus } from './task-status.enum';
-import { TaskList } from 'src/lists/list.entity';
-import { User } from 'src/auth/user.entity';
+import { TaskList } from '../lists/list.entity';
+import { User } from '../auth/user.entity';
 
 @EntityRepository(Task)
 export class TaskRepository extends Repository<Task> {
@@ -30,7 +30,7 @@ export class TaskRepository extends Repository<Task> {
     taskList: TaskList,
     user: User,
   ): Promise<Task> {
-    const { title, description, important, myDay } = createTaskDto;
+    const { title, description, important } = createTaskDto;
     const newTask = new Task();
     newTask.user = user;
     newTask.list = taskList;

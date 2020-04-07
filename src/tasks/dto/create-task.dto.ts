@@ -14,7 +14,4 @@ export class CreateTaskDto {
 
   @ApiPropertyOptional()
   important: boolean;
-
-  @ApiPropertyOptional()
-  myDay: boolean;
 }

@@ -17,8 +17,13 @@ export class AccessRepository extends Repository<Access> {
     return access;
   }
 
-  async saveRefreshToken(username: string): Promise<Access> {
-    const refreshToken = uuidv4();
-    return this.save({ username, refreshToken });
+  async getRefreshTokenByUsername(username: string): Promise<Access> {
+    const access = await this.findOne({ username });
+    if (access) {
+      return access;
+    } else {
+      const refreshToken = uuidv4();
+      return this.save({ username, refreshToken });
+    }
   }
 }

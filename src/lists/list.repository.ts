@@ -1,7 +1,7 @@
 import { Repository, EntityRepository } from 'typeorm';
 import { TaskList } from './list.entity';
 import { CreateTaskListDto } from './dto/create-list.dto';
-import { User } from 'src/auth/user.entity';
+import { User } from '../auth/user.entity';
 
 @EntityRepository(TaskList)
 export class TaskListRepository extends Repository<TaskList> {

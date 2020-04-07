@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
-import { UserRepository } from 'src/auth/user.repository';
+import { UserRepository } from '../auth/user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { JwtService } from '@nestjs/jwt';
@@ -38,7 +38,7 @@ export class AuthService {
     const accessToken = await this.jwtService.sign(payload);
 
     // save refresh token
-    const access = await this.accessRepository.saveRefreshToken(
+    const access = await this.accessRepository.getRefreshTokenByUsername(
       authResponse.username,
     );
 
