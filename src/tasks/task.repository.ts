@@ -9,7 +9,8 @@ import { User } from '../auth/user.entity';
 export class TaskRepository extends Repository<Task> {
   async getTasks(user: User): Promise<Task[]> {
     const query = this.createQueryBuilder('task')
-      .where('task.userId = :userId', { userId: user.id })
+      .leftJoinAndSelect('task.list', 'task_list')
+      .where('task.user_id = :userId', { userId: user.id })
       .orderBy('task.id', 'DESC');
 
     const tasks = await query.getMany();
@@ -18,8 +19,9 @@ export class TaskRepository extends Repository<Task> {
 
   async getTaskById(id: number, user: User): Promise<Task> {
     const query = this.createQueryBuilder('task')
+      .leftJoinAndSelect('task.list', 'task_list')
       .where('task.id = :taskId', { taskId: id })
-      .andWhere('task.userId = :userId', { userId: user.id });
+      .andWhere('task.user_id = :userId', { userId: user.id });
 
     const task = await query.getOne();
     return task;

@@ -6,6 +6,7 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  JoinColumn,
 } from 'typeorm';
 import { TaskStatus } from './task-status.enum';
 import { TaskList } from '../lists/list.entity';
@@ -21,20 +22,16 @@ export class Task extends BaseEntity {
     user => user.tasks,
     { eager: false, nullable: false },
   )
+  @JoinColumn({ name: 'user_id' })
   user: User;
-
-  @Column()
-  userId: number;
 
   @ManyToOne(
     type => TaskList,
     task => task.tasks,
-    { eager: false, onDelete: 'CASCADE', nullable: true },
+    { eager: true, onDelete: 'CASCADE', nullable: true },
   )
+  @JoinColumn({ name: 'list_id' })
   list: TaskList;
-
-  @Column({ nullable: true })
-  listId: number;
 
   @Column()
   title: string;

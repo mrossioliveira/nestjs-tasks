@@ -34,7 +34,10 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const payload: JwtPayload = { username: authResponse.username };
+    const payload: JwtPayload = {
+      user_id: authResponse.userId,
+      username: authResponse.username,
+    };
     const accessToken = await this.jwtService.sign(payload);
 
     // save refresh token
@@ -54,6 +57,7 @@ export class AuthService {
     username: string,
     refreshToken: string,
   ): Promise<{ accessToken: string }> {
+    // TODO: Add userId on access table
     const access = await this.accessRepository.findOneByUsernameAndToken(
       username,
       refreshToken,
@@ -63,7 +67,10 @@ export class AuthService {
       throw new UnauthorizedException('Invalid token');
     }
 
-    const payload: JwtPayload = { username };
+    // FIXME: Remove this db call and use userId from access table
+    const user = await this.userRepository.findOne({ username });
+
+    const payload: JwtPayload = { user_id: user.id, username };
     const accessToken = await this.jwtService.sign(payload);
 
     return { accessToken };

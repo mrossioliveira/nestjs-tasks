@@ -7,6 +7,7 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  JoinColumn,
 } from 'typeorm';
 
 import { Task } from '../tasks/task.entity';
@@ -20,24 +21,20 @@ export class TaskList extends BaseEntity {
   @Column()
   title: string;
 
-  @Column()
-  system: boolean;
-
   @ManyToOne(
     type => User,
     user => user.lists,
     { eager: false },
   )
+  @JoinColumn({ name: 'user_id' })
   user: User;
-
-  @Column()
-  userId: number;
 
   @OneToMany(
     type => Task,
     task => task.list,
-    { eager: true },
+    { eager: false },
   )
+  @JoinColumn({ name: 'task_id' })
   tasks: Task[];
 
   @CreateDateColumn({
@@ -56,7 +53,6 @@ export class TaskList extends BaseEntity {
     return {
       id: 1,
       title: 'A mocked list',
-      system: false,
       user: User.createMock(),
       userId: 42,
       tasks: [],

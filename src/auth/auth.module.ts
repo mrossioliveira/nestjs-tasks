@@ -18,6 +18,7 @@ const jwtConfig = config.get('jwt');
       secret: process.env.JWT_SECRET || jwtConfig.secret,
       signOptions: {
         expiresIn: jwtConfig.expiresIn,
+        // issuer: 'token-issuer',
       },
     }),
     TypeOrmModule.forFeature([UserRepository, AccessRepository]),

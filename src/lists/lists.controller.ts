@@ -20,6 +20,8 @@ import { User } from '../auth/user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateListDTO } from './dto/update-list.dto';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { TasksService } from 'src/tasks/tasks.service';
+import { Task } from 'src/tasks/task.entity';
 
 @ApiTags('Task lists')
 @ApiBearerAuth()
@@ -28,7 +30,10 @@ import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 export class ListsController {
   private logger = new Logger('ListsController');
 
-  constructor(private listsService: ListsService) {}
+  constructor(
+    private listsService: ListsService,
+    private tasksService: TasksService,
+  ) {}
 
   @Get()
   getAllTaskLists(@GetUser() user: User): Promise<TaskList[]> {
@@ -56,6 +61,15 @@ export class ListsController {
     @GetUser() user: User,
   ): Promise<TaskList> {
     return this.listsService.getTaskListById(id, user);
+  }
+
+  @Get(':id/tasks')
+  getTasksByTaskListById(
+    @Param('id', ParseIntPipe) id: number,
+    @GetUser() user: User,
+  ): Promise<Task[]> {
+    this.logger.log(`Getting all tasks for ${id}.`);
+    return this.tasksService.getByTaskListId(id, user);
   }
 
   @Patch(':id')

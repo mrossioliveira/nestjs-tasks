@@ -7,7 +7,7 @@ import { User } from '../auth/user.entity';
 export class TaskListRepository extends Repository<TaskList> {
   async getTaskLists(user: User): Promise<TaskList[]> {
     const query = this.createQueryBuilder('task_list')
-      .where('task_list.userId = :userId', { userId: user.id })
+      .where('task_list.user_id = :userId', { userId: user.id })
       .orderBy('task_list.id', 'ASC');
 
     const taskLists = await query.getMany();
@@ -22,7 +22,6 @@ export class TaskListRepository extends Repository<TaskList> {
     const newTaskList = new TaskList();
     newTaskList.user = user;
     newTaskList.title = title;
-    newTaskList.system = false;
     newTaskList.tasks = [];
     await newTaskList.save();
 

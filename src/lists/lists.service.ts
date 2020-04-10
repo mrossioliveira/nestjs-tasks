@@ -31,7 +31,7 @@ export class ListsService {
   async getTaskListById(id: number, user: User): Promise<TaskList> {
     const foundTask = await this.taskListRepository.findOne({
       id,
-      userId: user.id,
+      user: { id: user.id },
     });
 
     if (!foundTask) {
@@ -77,7 +77,7 @@ export class ListsService {
   async deleteTaskListById(id: number, user: User): Promise<void> {
     const result: DeleteResult = await this.taskListRepository.delete({
       id,
-      userId: user.id,
+      user: { id: user.id },
     });
 
     if (result.affected === 0) {
