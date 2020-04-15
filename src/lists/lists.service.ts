@@ -29,16 +29,13 @@ export class ListsService {
    * @param user Authenticated user
    */
   async getTaskListById(id: number, user: User): Promise<TaskList> {
-    const foundTask = await this.taskListRepository.findOne({
-      id,
-      user: { id: user.id },
-    });
+    const foundList = await this.taskListRepository.findOne({ id });
 
-    if (!foundTask) {
+    if (!foundList) {
       throw new NotFoundException(`Task list with ID ${id} not found`);
     }
 
-    return foundTask;
+    return foundList;
   }
 
   /**
