@@ -20,8 +20,8 @@ import { User } from '../auth/user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateListDTO } from './dto/update-list.dto';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
-import { TasksService } from 'src/tasks/tasks.service';
-import { Task } from 'src/tasks/task.entity';
+import { TasksService } from '../tasks/tasks.service';
+import { Task } from '../tasks/task.entity';
 
 @ApiTags('Task lists')
 @ApiBearerAuth()
@@ -60,6 +60,7 @@ export class ListsController {
     @Param('id', ParseIntPipe) id: number,
     @GetUser() user: User,
   ): Promise<TaskList> {
+    this.logger.verbose(`User ${user.username} getting the list id ${id}`);
     return this.listsService.getTaskListById(id, user);
   }
 

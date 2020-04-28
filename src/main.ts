@@ -13,6 +13,9 @@ async function bootstrap() {
   // helmet
   app.use(helmet());
 
+  // enable CORS
+  app.enableCors();
+
   const options = new DocumentBuilder()
     .setTitle('TODO API')
     .setDescription('Basic Todo app API')

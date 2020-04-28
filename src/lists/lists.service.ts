@@ -29,10 +29,16 @@ export class ListsService {
    * @param user Authenticated user
    */
   async getTaskListById(id: number, user: User): Promise<TaskList> {
-    const foundList = await this.taskListRepository.findOne({ id });
+    const foundList = await this.taskListRepository.findOne(
+      {
+        id,
+        user: { id: user.id },
+      },
+      { relations: ['tasks'] },
+    );
 
     if (!foundList) {
-      throw new NotFoundException(`Task list with ID ${id} not found`);
+      throw new NotFoundException(`Task list with ID ${id} not found!!!`);
     }
 
     return foundList;
@@ -78,7 +84,7 @@ export class ListsService {
     });
 
     if (result.affected === 0) {
-      throw new NotFoundException(`Task list with ID ${id} not found`);
+      throw new NotFoundException(`Task list with ID ${id} not foundXXX`);
     }
   }
 }

@@ -40,6 +40,7 @@ export class TasksService {
   }
 
   async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
+    this.logger.log(`Creating task with payload: ${createTaskDto}`);
     let taskList;
     try {
       taskList = await this.listService.getTaskListById(
