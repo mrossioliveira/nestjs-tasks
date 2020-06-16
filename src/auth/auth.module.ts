@@ -1,30 +1,35 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserRepository } from './user.repository';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from './jwt.strategy';
 import * as config from 'config';
-import { AccessRepository } from './access.repository';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 const jwtConfig = config.get('jwt');
 
 @Module({
   imports: [
+    ClientsModule.register([
+      {
+        name: 'AUTH_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: 'localhost',
+          port: 8000,
+        },
+      },
+    ]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: process.env.JWT_SECRET || jwtConfig.secret,
       signOptions: {
         expiresIn: jwtConfig.expiresIn,
-        // issuer: 'token-issuer',
       },
     }),
-    TypeOrmModule.forFeature([UserRepository, AccessRepository]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
-  exports: [JwtStrategy, PassportModule],
+  providers: [AuthService],
+  exports: [PassportModule],
 })
 export class AuthModule {}

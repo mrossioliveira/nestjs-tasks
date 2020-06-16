@@ -6,7 +6,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './task.entity';
 import { DeleteResult } from 'typeorm';
 import { ListsService } from '../lists/lists.service';
-import { User } from '../auth/user.entity';
 import { UpdateTaskDTO } from './dto/update-task.dto';
 
 @Injectable()
@@ -19,12 +18,12 @@ export class TasksService {
     private listService: ListsService,
   ) {}
 
-  async getTasks(user: User): Promise<Task[]> {
-    return this.taskRepository.getTasks(user);
+  async getTasks(userId: number): Promise<Task[]> {
+    return this.taskRepository.getTasks(userId);
   }
 
-  async getTaskById(id: number, user: User): Promise<Task> {
-    const foundTask = await this.taskRepository.getTaskById(id, user);
+  async getTaskById(id: number, userId: number): Promise<Task> {
+    const foundTask = await this.taskRepository.getTaskById(id, userId);
 
     if (!foundTask) {
       throw new NotFoundException(`Task with ID ${id} not found`);
@@ -32,26 +31,29 @@ export class TasksService {
     return foundTask;
   }
 
-  async getByTaskListId(listId: number, user: User): Promise<Task[]> {
+  async getByTaskListId(listId: number, userId: number): Promise<Task[]> {
     return this.taskRepository.find({
       list: { id: listId },
-      user: { id: user.id },
+      userId,
     });
   }
 
-  async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
+  async createTask(
+    createTaskDto: CreateTaskDto,
+    userId: number,
+  ): Promise<Task> {
     this.logger.log(`Creating task with payload: ${createTaskDto}`);
     let taskList;
     try {
       taskList = await this.listService.getTaskListById(
         createTaskDto.listId,
-        user,
+        userId,
       );
     } catch (error) {
       this.logger.log('Task created without a list');
     }
 
-    return this.taskRepository.createTask(createTaskDto, taskList, user);
+    return this.taskRepository.createTask(createTaskDto, taskList, userId);
   }
 
   async deleteTaskById(id: number): Promise<void> {
@@ -65,9 +67,9 @@ export class TasksService {
   async updateTask(
     id: number,
     updateTaskDto: UpdateTaskDTO,
-    user: User,
+    userId: number,
   ): Promise<Task> {
-    const task = await this.getTaskById(id, user);
+    const task = await this.getTaskById(id, userId);
 
     task.title = updateTaskDto.title.trim();
     task.description = updateTaskDto.description;
@@ -78,9 +80,9 @@ export class TasksService {
   async updateTaskStatus(
     id: number,
     status: TaskStatus,
-    user: User,
+    userId: number,
   ): Promise<Task> {
-    const task = await this.getTaskById(id, user);
+    const task = await this.getTaskById(id, userId);
     task.status = status;
     await task.save();
     return task;
@@ -89,9 +91,9 @@ export class TasksService {
   async updateTaskImportant(
     id: number,
     important: boolean,
-    user: User,
+    userId: number,
   ): Promise<Task> {
-    const task = await this.getTaskById(id, user);
+    const task = await this.getTaskById(id, userId);
     task.important = important;
     await task.save();
     return task;

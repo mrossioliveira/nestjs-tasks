@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 
 import { Task } from '../tasks/task.entity';
-import { User } from '../auth/user.entity';
+import { type } from 'os';
 
 @Entity()
 export class TaskList extends BaseEntity {
@@ -21,13 +21,16 @@ export class TaskList extends BaseEntity {
   @Column()
   title: string;
 
-  @ManyToOne(
-    type => User,
-    user => user.lists,
-    { eager: false },
-  )
-  @JoinColumn({ name: 'user_id' })
-  user: User;
+  // @ManyToOne(
+  //   type => User,
+  //   user => user.lists,
+  //   { eager: false },
+  // )
+  // @JoinColumn({ name: 'user_id' })
+  // user: User;
+
+  @Column({ name: 'user_id' })
+  userId: number;
 
   @OneToMany(
     type => Task,
@@ -53,7 +56,6 @@ export class TaskList extends BaseEntity {
     return {
       id: 1,
       title: 'A mocked list',
-      user: User.createMock(),
       userId: 42,
       tasks: [],
     };

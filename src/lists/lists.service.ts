@@ -5,7 +5,6 @@ import { TaskListRepository } from './list.repository';
 import { TaskList } from './list.entity';
 import { CreateTaskListDto } from './dto/create-list.dto';
 import { DeleteResult } from 'typeorm';
-import { User } from '../auth/user.entity';
 import { UpdateListDTO } from './dto/update-list.dto';
 
 @Injectable()
@@ -19,8 +18,8 @@ export class ListsService {
    * Get all task lists for the authenticated user
    * @param user Authenticated user
    */
-  async getTaskLists(user: User): Promise<TaskList[]> {
-    return this.taskListRepository.getTaskLists(user);
+  async getTaskLists(userId: number): Promise<TaskList[]> {
+    return this.taskListRepository.getTaskLists(userId);
   }
 
   /**
@@ -28,11 +27,11 @@ export class ListsService {
    * @param id ID of the desired task list
    * @param user Authenticated user
    */
-  async getTaskListById(id: number, user: User): Promise<TaskList> {
+  async getTaskListById(id: number, userId: number): Promise<TaskList> {
     const foundList = await this.taskListRepository.findOne(
       {
         id,
-        user: { id: user.id },
+        userId,
       },
       { relations: ['tasks'] },
     );
@@ -51,9 +50,9 @@ export class ListsService {
    */
   async createTaskList(
     createTaskListDto: CreateTaskListDto,
-    user: User,
+    userId: number,
   ): Promise<TaskList> {
-    return this.taskListRepository.createTaskList(createTaskListDto, user);
+    return this.taskListRepository.createTaskList(createTaskListDto, userId);
   }
 
   /**
@@ -64,10 +63,10 @@ export class ListsService {
    */
   async updateTaskList(
     id: number,
-    user: User,
+    userId: number,
     updateListDto: UpdateListDTO,
   ): Promise<TaskList> {
-    const taskList = await this.getTaskListById(id, user);
+    const taskList = await this.getTaskListById(id, userId);
     taskList.title = updateListDto.title;
     await taskList.save();
     return taskList;
@@ -77,14 +76,14 @@ export class ListsService {
    * Deletes a single task list
    * @param id ID of the task list
    */
-  async deleteTaskListById(id: number, user: User): Promise<void> {
+  async deleteTaskListById(id: number, userId: number): Promise<void> {
     const result: DeleteResult = await this.taskListRepository.delete({
       id,
-      user: { id: user.id },
+      userId,
     });
 
     if (result.affected === 0) {
-      throw new NotFoundException(`Task list with ID ${id} not foundXXX`);
+      throw new NotFoundException(`Task list with ID ${id} not found`);
     }
   }
 }
