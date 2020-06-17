@@ -6,8 +6,6 @@ services:
       - POSTGRES_DB=task_dev
       - POSTGRES_USER=task_dev
       - POSTGRES_PASSWORD=password
-    # volumes:
-    #   - db-data:/var/lib/postgresql/data
     ports:
       - '5432:5432'
   api:
@@ -23,5 +21,3 @@ services:
       - db
     depends_on:
       - db
-# volumes:
-#   db-data:
