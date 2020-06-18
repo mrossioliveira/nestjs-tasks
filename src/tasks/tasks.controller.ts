@@ -18,15 +18,15 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskStatusValidationPipe } from './pipes/task-status-validation.pipe';
 import { Task } from './task.entity';
 import { ParseBooleanPipe } from './pipes/parse-boolean.pipe';
-import { AuthGuard } from '@nestjs/passport';
 import { GetUserId } from '../auth/get-user.decorator';
 import { UpdateTaskDTO } from './dto/update-task.dto';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('Tasks')
 @ApiBearerAuth()
 @Controller('tasks')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard)
 export class TasksController {
   private logger = new Logger('TasksController');
 

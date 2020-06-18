@@ -1,5 +1,5 @@
 server:
-  port: 3005
+  port: 3000
 
 db:
   type: 'postgres'
@@ -7,4 +7,4 @@ db:
   database: 'task_dev'
 
 jwt:
-  expiresIn: 3600
+  expiresIn: '1h'

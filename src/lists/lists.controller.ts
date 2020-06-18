@@ -16,16 +16,16 @@ import { ListsService } from './lists.service';
 import { TaskList } from './list.entity';
 import { CreateTaskListDto } from './dto/create-list.dto';
 import { GetUserId } from '../auth/get-user.decorator';
-import { AuthGuard } from '@nestjs/passport';
 import { UpdateListDTO } from './dto/update-list.dto';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { TasksService } from '../tasks/tasks.service';
 import { Task } from '../tasks/task.entity';
+import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('Task lists')
 @ApiBearerAuth()
 @Controller('lists')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard)
 export class ListsController {
   private logger = new Logger('ListsController');
 

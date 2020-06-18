@@ -21,6 +21,10 @@ export class AuthService {
     return this.client.send<any>('signin', authCredentialsDto).toPromise();
   }
 
+  async validateUser(username: string): Promise<any> {
+    return this.client.send<string>('validateUser', username).toPromise();
+  }
+
   async refresh(
     username: string,
     refreshToken: string,
