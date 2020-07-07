@@ -16,9 +16,7 @@ You can check the project [here](https://github.com/mrossioliveira/flutter-tasks
 
 ## Installation
 
-```bash
-$ npm install
-```
+This service is part of a microservices architecture and therefore you need to spin up the [authentication service](https://github.com/mrossioliveira/nestjs-tasks-auth) after this one.
 
 ## Running with Docker Compose
 
@@ -27,6 +25,8 @@ $ docker-compose up -d --build
 ```
 
 You can check how to setup Docker Compose [here](https://docs.docker.com/compose/install/) in case you haven't done it yet.
+
+> :warning: Make sure you also run the authentication service as stated in the Installation section.
 
 ## Running the app locally (needs Postgres running on localhost:5432)
 
@@ -50,19 +50,6 @@ $ npm run start:prod
 ## Swagger
 
 This project uses [swagger-ui-express](https://www.npmjs.com/package/swagger-ui-express). Access http://localhost:3000/api to see the docs.
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
 
 ## Support
 
