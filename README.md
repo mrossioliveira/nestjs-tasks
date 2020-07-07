@@ -30,6 +30,12 @@ You can check how to setup Docker Compose [here](https://docs.docker.com/compose
 
 ## Running the app locally (needs Postgres running on localhost:5432)
 
+Run a PostgreSQL instance on Docker:
+
+```bash
+$ docker run --name taskspostgres -p 5432:5432 -e POSTGRES_DB=task_dev -e POSTGRES_USER=task_dev -e POSTGRES_PASSWORD=password -d postgres
+```
+
 ```bash
 # development
 $ npm run start
