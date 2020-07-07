@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 services:
   db:
     image: postgres:alpine
@@ -8,6 +8,8 @@ services:
       - POSTGRES_PASSWORD=password
     ports:
       - '5432:5432'
+    networks:
+      - tasks-backend
   http:
     command: npm run start:dev
     build: .
@@ -15,5 +17,11 @@ services:
       - .env
     ports:
       - '3000:3000'
+    networks:
+      - tasks-backend
     depends_on:
       - db
+
+networks:
+  tasks-backend:
+    name: tasks-backend
