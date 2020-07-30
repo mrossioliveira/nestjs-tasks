@@ -4,8 +4,6 @@ import { TaskListRepository } from './list.repository';
 import { TaskList } from './list.entity';
 import { NotFoundException } from '@nestjs/common';
 import { CreateTaskListDto } from './dto/create-list.dto';
-import { async } from 'rxjs/internal/scheduler/async';
-import { doesNotReject } from 'assert';
 
 const mockUser = { id: 42, username: 'Tester' };
 const mockTaskListRepository = () => ({
@@ -55,13 +53,16 @@ describe('ListsService', () => {
     it('should return a task list for the given id', async () => {
       listRepository.findOne.mockResolvedValue(TaskList.createMock());
 
-      const result = await listsService.getTaskListById(LIST_ID, mockUser);
+      const result = await listsService.getTaskListById(LIST_ID, mockUser.id);
 
       expect(result).toEqual(TaskList.createMock());
-      expect(listRepository.findOne).toHaveBeenCalledWith({
-        id: LIST_ID,
-        userId: mockUser.id,
-      });
+      expect(listRepository.findOne).toHaveBeenCalledWith(
+        {
+          id: LIST_ID,
+          userId: mockUser.id,
+        },
+        { relations: ['tasks'] },
+      );
     });
 
     it('should thrown an error as the list was not found', () => {
@@ -132,7 +133,7 @@ describe('ListsService', () => {
 
       expect(listRepository.delete).not.toHaveBeenCalled();
 
-      await listsService.deleteTaskListById(1, mockUser);
+      await listsService.deleteTaskListById(1, mockUser.id);
 
       expect(listRepository.delete).toHaveBeenCalledWith({
         id: 1,
@@ -142,7 +143,7 @@ describe('ListsService', () => {
 
     it('should throw an exception as the list was not found', () => {
       listRepository.delete.mockResolvedValue({ affected: 0 });
-      expect(listsService.deleteTaskListById(1, mockUser)).rejects.toThrow(
+      expect(listsService.deleteTaskListById(1, mockUser.id)).rejects.toThrow(
         NotFoundException,
       );
       expect(listRepository.delete).toHaveBeenCalledWith({

@@ -18,7 +18,7 @@ export class TaskListRepository extends Repository<TaskList> {
     userId: number,
   ): Promise<TaskList> {
     const { title } = createTaskListDto;
-    const newTaskList = new TaskList();
+    const newTaskList = this.create();
     newTaskList.userId = userId;
     newTaskList.title = title;
     newTaskList.tasks = [];
